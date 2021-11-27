@@ -1,7 +1,7 @@
 <template>
-  <el-container class="shortestPath">
+  <el-container class="MST">
     <el-header>
-      <Header title="最短路径 - Dijkstra"/>
+      <Header title="最小生成树 - Kruskal"/>
     </el-header>
     <el-main v-loading="loading">
       <SeeksRelationGraph ref="seeksRelationGraph" :options="graphOptions"/>
@@ -18,14 +18,6 @@
           <el-form ref="form" :model="configureForm" label-width="80px">
             <el-form-item label="顶点数">
               <el-input v-model="configureForm.nodeNum"></el-input>
-            </el-form-item>
-            <el-form-item label="选择源点">
-              <el-select v-model="configureForm.origin" placeholder="请选择">
-                <el-option v-for="(item, index) in configureForm.nodeNum ? parseInt(configureForm.nodeNum) : 0"
-                           :key="index"
-                           :label="getCharByIndex(index)" :value="index">
-                </el-option>
-              </el-select>
             </el-form-item>
           </el-form>
         </el-tab-pane>
@@ -84,14 +76,6 @@
         <el-button type="primary" @click="handleConfigure">保存</el-button>
       </span>
     </el-dialog>
-    <el-dialog class="resDialog" title="结果" :visible.sync="resDialogVisible" width="60%">
-      <h2>源点到其它各点的距离为：</h2>
-      <p v-if="index !== 0" v-for="(item, index) in resTableData" :key="index">源点到点 {{ getCharByIndex(index) }} 的距离为：
-        {{ item }}</p>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="resDialogVisible = false">关 闭</el-button>
-      </span>
-    </el-dialog>
   </el-container>
 </template>
 
@@ -100,7 +84,7 @@ import SeeksRelationGraph from "relation-graph";
 import Header from "../components/Header";
 
 export default {
-  name: "ShortestPath",
+  name: "MST",
   components: {SeeksRelationGraph, Header},
   data() {
     return {
@@ -130,10 +114,7 @@ export default {
         nodeNum: undefined,
         origin: undefined,
         links: []
-      },
-      // 结果相关
-      resTableData: undefined,
-      resDialogVisible: false
+      }
     }
   },
   methods: {
@@ -198,7 +179,6 @@ export default {
     handleExample() {
       this.configureForm = {
         nodeNum: 6,
-        origin: 0,
         links: [
           {
             start: "0",
@@ -208,37 +188,37 @@ export default {
           {
             start: "0",
             end: "2",
-            value: "12"
+            value: "2"
           },
           {
             start: "1",
             end: "2",
-            value: "9"
+            value: "6"
           },
           {
             start: "1",
             end: "3",
-            value: "3"
+            value: "11"
           },
           {
             start: "2",
-            end: "4",
-            value: "5"
+            end: "3",
+            value: "9"
           },
           {
-            start: "3",
-            end: "2",
-            value: "4"
-          },
-          {
-            start: "3",
+            start: "2",
             end: "4",
             value: "13"
           },
           {
             start: "3",
+            end: "4",
+            value: "7"
+          },
+          {
+            start: "3",
             end: "5",
-            value: "15"
+            value: "3"
           },
           {
             start: "4",
@@ -250,68 +230,87 @@ export default {
       this.handleConfigure()
     },
     handleCount() {
-      this.resTableData = this.count()
-      this.resDialogVisible = true
+      this.count()
     },
     /**
-     * 计算最短路径
-     * @returns {any[]}
+     * 计算最小生成树
      */
     count() {
-      let max = 99999
-      let nodeNum = parseInt(this.configureForm.nodeNum)
-      let origin = parseInt(this.configureForm.origin)
+      // let max = 99999
+      // let nodeNum = parseInt(this.configureForm.nodeNum)
 
-      // 初始化距离数组
-      let distance = []
-      for (let i = 0; i < nodeNum; i++) {
-        let item = new Array(nodeNum).fill(max)
-        item[i] = 0
-        distance.push(item)
-      }
-      this.configureForm.links.forEach(item => {
-        distance[item.start][item.end] = parseInt(item.value)
-      })
 
-      // 初始化结果数组
-      let res = new Array(nodeNum)
-      for (let i = 0; i < nodeNum; i++) {
-        res[i] = distance[origin][i]
-      }
+      var NumNodes = 9;
+      var NumEdges = 15;
+      var start = [4, 2, 0, 0, 1, 3, 1, 5, 1, 6, 3, 3, 2, 3, 4];
+      var end =   [7, 8, 1, 5, 8, 7, 6, 6, 2, 7, 4, 8, 3, 6, 5];
+      var weight = [1, 2, 3, 4, 5, 6, 6, 7, 8, 9, 10, 11, 12, 14, 18];
 
-      // 初始化标记数组
-      let flag = new Array(nodeNum).fill(0)
-      flag[origin] = 1
-
-      // 计算
-      for (let i = 0; i < nodeNum; i++) {
-        let min = max
-        let tempNode
-        // 找到距离源点最近的点，加入
-        for (let j = 0; j < nodeNum; j++) {
-          if (flag[j] === 0 && res[j] < min) {
-            min = res[j]
-            tempNode = j
-          }
+      let edges = [];
+      let result = 0;
+      for (let i = 0; i < NumEdges; i++) {
+        // let NewNode = new node(start[i], end[i], weight[i]);
+        let tempLink = {
+          start: start[i],
+          end: end[i],
+          value: weight[i]
         }
-        flag[tempNode] = 1
-        // 根据新加入的点更新点到源点的距离
-        for (let j = 0; j < nodeNum; j++) {
-          if (flag[j] === 0 && distance[tempNode][j] < max) {
-            if (res[j] > res[tempNode] + distance[tempNode][j]) {
-              res[j] = res[tempNode] + distance[tempNode][j]
+        edges.push(tempLink);
+      }
+
+      //记录已经加入的点
+      let hasNode = {}
+
+      for (let i = 0; i < NumEdges; i++) {
+        let start = edges[i].start;
+        let end = edges[i].end;
+        let value = edges[i].value;
+        //这要起点和重点不是同时在同一个群落中即可
+        if(hasNode[start] == undefined && hasNode[end] == undefined){
+          //如果两个点都是没有使用过的点直接加入形成新群落
+          let length = 0
+          for(let index in hasNode){
+            length++
+          }
+          hasNode[start] = length
+          hasNode[end] = length
+          result++
+          document.write(start + "->" + end + ":" + value + "</br>")
+        }else if(hasNode[start] == undefined && hasNode[end] != undefined){
+          //出发点是新点，目的地已经存在了
+          hasNode[start] = hasNode[end]
+          //加入群落
+          result++
+          document.write(start + "->" + end + ":" + value + "</br>")
+        }else if(hasNode[start] != undefined&&hasNode[end] == undefined){
+          //目的地是新点，出发点已经存在了
+          hasNode[end] = hasNode[start]
+          //加入群落
+          result++
+          document.write(start + "->" + end + ":" + value + "</br>")
+        }else if(hasNode[start] != hasNode[end]){
+          //如果两个点都是使用过的但是不在一个群落里，那么结束点的群落就加入出发点群落
+          let Community = hasNode[end]
+          for(let index in hasNode){
+            if(hasNode[index] == Community){
+              hasNode[index] = hasNode[start]
             }
           }
+          result++
+          document.write(start + "->" + end + ":" + value + "</br>");
+        }
+        if (result == NumNodes - 1) {
+          break
         }
       }
-      return res
+
     }
   }
 }
 </script>
 
 <style scoped lang="scss">
-.shortestPath {
+.MST {
   height: 100%;
 
   .el-header {
