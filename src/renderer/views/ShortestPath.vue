@@ -8,7 +8,8 @@
     </el-main>
     <el-footer>
       <el-button type="info" @click="configureDialogVisible = true">配 置</el-button>
-      <el-button type="primary" @click="count">计 算</el-button>
+      <el-button type="info" @click="handleExample">样 例</el-button>
+      <el-button type="primary" @click="handleCount">计 算</el-button>
     </el-footer>
 
     <el-dialog title="配置" :visible.sync="configureDialogVisible" width="80%">
@@ -83,6 +84,18 @@
         <el-button type="primary" @click="handleConfigure">保存</el-button>
       </span>
     </el-dialog>
+    <el-dialog title="结果" :visible.sync="resDialogVisible" width="60%">
+      <el-table :data="resTableData" style="width: 100%">
+        <el-table-column label="日期" width="180">
+          <template slot-scope="scope">
+            {{scope}}
+          </template>
+        </el-table-column>
+      </el-table>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="resDialogVisible = false">关 闭</el-button>
+      </span>
+    </el-dialog>
   </el-container>
 </template>
 
@@ -121,7 +134,10 @@ export default {
         nodeNum: undefined,
         origin: undefined,
         links: []
-      }
+      },
+      // 结果相关
+      resTableData: undefined,
+      resDialogVisible: false
     }
   },
   mounted() {
@@ -134,9 +150,17 @@ export default {
         this.configureForm.origin = null
       }
     },
+    /**
+     * 根据ASCII值获取对应的字符
+     * @param index
+     * @returns {string}
+     */
     getCharByIndex(index) {
       return String.fromCharCode('A'.charCodeAt(0) + index)
     },
+    /**
+     * 编辑对话框中，添加边
+     */
     addLinks() {
       this.configureForm.links.forEach(item => {
         item.disabled = true
@@ -149,13 +173,15 @@ export default {
       }
       this.configureForm.links.push(tempRow)
     },
+    /**
+     * 读取编辑对话框中的参数，转换为json，传入组件生成图
+     */
     handleConfigure() {
       let nodes = []
       for (let i = 0; i < this.configureForm.nodeNum; i++) {
         let node = {
           id: i.toString(),
           text: this.getCharByIndex(i)
-          // color: this.configureForm.origin === i ? '#43a2f1' : null
         }
         nodes.push(node)
       }
@@ -179,87 +205,119 @@ export default {
         that.configureDialogVisible = false
       })
     },
+    /**
+     * 获取图的样例
+     */
+    handleExample() {
+      this.configureForm = {
+        nodeNum: 6,
+        origin: 0,
+        links: [
+          {
+            start: "0",
+            end: "1",
+            value: "1"
+          },
+          {
+            start: "0",
+            end: "2",
+            value: "12"
+          },
+          {
+            start: "1",
+            end: "2",
+            value: "9"
+          },
+          {
+            start: "1",
+            end: "3",
+            value: "3"
+          },
+          {
+            start: "2",
+            end: "4",
+            value: "5"
+          },
+          {
+            start: "3",
+            end: "2",
+            value: "4"
+          },
+          {
+            start: "3",
+            end: "4",
+            value: "13"
+          },
+          {
+            start: "3",
+            end: "5",
+            value: "15"
+          },
+          {
+            start: "4",
+            end: "5",
+            value: "4"
+          }
+        ]
+      }
+      this.handleConfigure()
+    },
+    handleCount() {
+      this.resTableData = this.count()
+      this.resDialogVisible = true
+    },
+    /**
+     * 计算最短路径
+     * @returns {any[]}
+     */
     count() {
-      let max = 999
-
-      // this.loading = true
-      // setTimeout(() => {
-      //   this.loading = false
-      // }, 1000)
+      let max = 99999
+      let nodeNum = parseInt(this.configureForm.nodeNum)
+      let origin = parseInt(this.configureForm.origin)
 
       // 初始化距离数组
       let distance = []
-      for (let i = 0; i < 6; i++) {
-        let item = new Array(6)
+      for (let i = 0; i < nodeNum; i++) {
+        let item = new Array(nodeNum).fill(max)
+        item[i] = 0
         distance.push(item)
       }
-      // this.configureForm.links.forEach(item => {
-      //   distance[item.start][item.end] = item.value
-      // })
-
-      distance[0][1] = 1
-      distance[0][2] = 12
-      distance[1][2] = 9
-      distance[1][3] = 3
-      distance[2][4] = 5
-      distance[3][2] = 4
-      distance[3][4] = 13
-      distance[3][5] = 15
-      distance[4][5] = 4
-
-
-      // console.log("--distance--")
-      // console.log(distance)
-      // console.log("--distance--")
+      this.configureForm.links.forEach(item => {
+        distance[item.start][item.end] = parseInt(item.value)
+      })
 
       // 初始化结果数组
-      // let res = new Array(parseInt(this.configureForm.nodeNum))
-      // for (let i = 1; i < this.configureForm.nodeNum; i++) {
-      //   res[i] = distance[this.configureForm.origin][i]
-      // }
-      let res = new Array(6)
-      res[0] = 0
-      res[1] = 1
-      res[2] = 12
-      // console.log("--res--")
-      // console.log(res)
-      // console.log("--res--")
+      let res = new Array(nodeNum).fill(max)
+      for (let i = 0; i < nodeNum; i++) {
+        res[i] = distance[origin][i]
+      }
 
       // 初始化标记数组
-      // let flag = new Array(parseInt(this.configureForm.nodeNum))
-      // flag[this.configureForm.origin] = 1
-      let flag = new Array(6)
-      flag[0] = 1
-      // console.log("--flag--")
-      // console.log(flag)
-      // console.log("--flag--")
+      let flag = new Array(nodeNum).fill(0)
+      flag[origin] = 1
 
       // 计算
-      for (let i = 0; i < 6; i++) {
-        let min = 9999
+      for (let i = 0; i < nodeNum; i++) {
+        let min = max
         let tempNode
-        for (let j = 0; j < 6; j++) {
-          // 如果节点未加入且距离源点路径最小
-          if (flag[j] !== 1 && res[j] < min) {
+        // 找到距离源点最近的点，加入
+        for (let j = 0; j < nodeNum; j++) {
+          if (flag[j] === 0 && res[j] < min) {
             min = res[j]
             tempNode = j
           }
         }
-        console.log("tempNode:" +tempNode)
-        console.log("min:" + min)
         flag[tempNode] = 1
-        for (let j = 0; j < 6; j++) {
-          if (flag[j] !== 1 && distance[tempNode][j]) {
-            if (res[j] > res[tempNode] + distance[tempNode][j] || !res[j]) {
+        // 根据新加入的点更新点到源点的距离
+        for (let j = 0; j < nodeNum; j++) {
+          if (flag[j] === 0 && distance[tempNode][j] < max) {
+            if (res[j] > res[tempNode] + distance[tempNode][j]) {
               res[j] = res[tempNode] + distance[tempNode][j]
             }
           }
         }
       }
-      console.log("--res--")
-      console.log(res)
-      console.log("--res--")
-
+      return res
     }
   }
 }
