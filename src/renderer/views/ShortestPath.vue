@@ -84,14 +84,10 @@
         <el-button type="primary" @click="handleConfigure">保存</el-button>
       </span>
     </el-dialog>
-    <el-dialog title="结果" :visible.sync="resDialogVisible" width="60%">
-      <el-table :data="resTableData" style="width: 100%">
-        <el-table-column label="日期" width="180">
-          <template slot-scope="scope">
-            {{scope}}
-          </template>
-        </el-table-column>
-      </el-table>
+    <el-dialog class="resDialog" title="结果" :visible.sync="resDialogVisible" width="60%">
+      <h2>源点到其它各点的距离为：</h2>
+      <p v-if="index !== 0" v-for="(item, index) in resTableData" :key="index">源点到点 {{ getCharByIndex(index) }} 的距离为：
+        {{ item }}</p>
       <span slot="footer" class="dialog-footer">
         <el-button @click="resDialogVisible = false">关 闭</el-button>
       </span>
@@ -139,9 +135,6 @@ export default {
       resTableData: undefined,
       resDialogVisible: false
     }
-  },
-  mounted() {
-    // this.showSeeksGraph()
   },
   computed: {},
   methods: {
@@ -263,6 +256,7 @@ export default {
       this.handleConfigure()
     },
     handleCount() {
+      console.log(this.count())
       this.resTableData = this.count()
       this.resDialogVisible = true
     },
@@ -287,7 +281,7 @@ export default {
       })
 
       // 初始化结果数组
-      let res = new Array(nodeNum).fill(max)
+      let res = new Array(nodeNum)
       for (let i = 0; i < nodeNum; i++) {
         res[i] = distance[origin][i]
       }
@@ -344,6 +338,14 @@ export default {
   .el-main {
     width: 100%;
     height: 100%;
+  }
+
+  .resDialog {
+    p {
+      font-size: 18px;
+      margin: 10px 0;
+    }
+
   }
 }
 </style>
