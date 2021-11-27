@@ -1,4 +1,5 @@
 'use strict'
+const Multispinner = require('multispinner')
 
 process.env.NODE_ENV = 'production'
 

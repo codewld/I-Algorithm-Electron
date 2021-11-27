@@ -17,6 +17,9 @@
     "postinstall": ""
   },
   "build": {
+    "electronDownload": {
+      "mirror": "https://npmmirror.com/mirrors/electron/"
+    },
     "productName": "i-algorithm-electron",
     "appId": "com.example.yourapp",
     "directories": {
@@ -52,6 +55,7 @@
   },
   "dependencies": {
     "element-ui": "^2.15.6",
+    "relation-graph": "^1.1.0",
     "vue": "^2.5.16",
     "vue-electron": "^1.0.6",
     "vue-router": "^3.0.1"
@@ -80,6 +84,7 @@
     "html-webpack-plugin": "^3.2.0",
     "listr": "^0.14.3",
     "mini-css-extract-plugin": "0.4.0",
+    "multispinner": "^0.2.1",
     "node-loader": "^0.6.0",
     "node-sass": "^4.9.2",
     "sass-loader": "^7.0.3",
