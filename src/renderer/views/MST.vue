@@ -142,11 +142,11 @@ export default {
       this.configureForm.links.push(tempRow)
     },
     /**
-     * 读取编辑对话框中的参数，转换为json，传入组件生成图
+     * 将数据转为图组件所需的JSON格式
      */
-    handleConfigure() {
+    transformDataToJson(nodeNum, aLinks, rootId) {
       let nodes = []
-      for (let i = 0; i < this.configureForm.nodeNum; i++) {
+      for (let i = 0; i < nodeNum; i++) {
         let node = {
           id: i.toString(),
           text: this.getCharByIndex(i)
@@ -154,7 +154,7 @@ export default {
         nodes.push(node)
       }
       let links = []
-      this.configureForm.links.forEach(item => {
+      aLinks.forEach(item => {
         let link = {
           from: item.start.toString(),
           to: item.end.toString(),
@@ -162,12 +162,17 @@ export default {
         }
         links.push(link)
       })
-      let rootId = this.configureForm.origin
-      let data = {
+      return {
         rootId: rootId,
         nodes: nodes,
         links: links
       }
+    },
+    /**
+     * 读取编辑对话框中的参数，转换为json，传入组件生成图
+     */
+    handleConfigure() {
+      let data = this.transformDataToJson(this.configureForm.nodeNum, this.configureForm.links, this.configureForm.origin);
       let that = this
       this.$refs.seeksRelationGraph.setJsonData({...data}, () => {
         that.configureDialogVisible = false
@@ -230,41 +235,35 @@ export default {
       this.handleConfigure()
     },
     handleCount() {
-      this.count()
+      let links = this.count()
+      console.log(links)
+      let data = this.transformDataToJson(this.configureForm.nodeNum, links, this.configureForm.origin);
+      let that = this
+      this.$refs.seeksRelationGraph.setJsonData({...data}, () => {
+        that.configureDialogVisible = false
+      })
+
     },
     /**
      * 计算最小生成树
      */
     count() {
-      // let max = 99999
-      // let nodeNum = parseInt(this.configureForm.nodeNum)
-
-
-      var NumNodes = 9;
-      var NumEdges = 15;
-      var start = [4, 2, 0, 0, 1, 3, 1, 5, 1, 6, 3, 3, 2, 3, 4];
-      var end =   [7, 8, 1, 5, 8, 7, 6, 6, 2, 7, 4, 8, 3, 6, 5];
-      var weight = [1, 2, 3, 4, 5, 6, 6, 7, 8, 9, 10, 11, 12, 14, 18];
-
-      let edges = [];
-      let result = 0;
-      for (let i = 0; i < NumEdges; i++) {
-        // let NewNode = new node(start[i], end[i], weight[i]);
-        let tempLink = {
-          start: start[i],
-          end: end[i],
-          value: weight[i]
-        }
-        edges.push(tempLink);
-      }
+      let nodeNum = parseInt(this.configureForm.nodeNum)
+      let links = Array.from(this.configureForm.links)
+      links.sort((a, b) => {
+        return a.value - b.value
+      })
+      let linkNum = links.length
+      let flag = 0
 
       //记录已经加入的点
       let hasNode = {}
+      let res = []
 
-      for (let i = 0; i < NumEdges; i++) {
-        let start = edges[i].start;
-        let end = edges[i].end;
-        let value = edges[i].value;
+      for (let i = 0; i < linkNum && flag < nodeNum - 1; i++) {
+        let start = links[i].start;
+        let end = links[i].end;
+        let value = links[i].value;
         //这要起点和重点不是同时在同一个群落中即可
         if(hasNode[start] == undefined && hasNode[end] == undefined){
           //如果两个点都是没有使用过的点直接加入形成新群落
@@ -274,20 +273,20 @@ export default {
           }
           hasNode[start] = length
           hasNode[end] = length
-          result++
-          document.write(start + "->" + end + ":" + value + "</br>")
+          flag++
+          res.push(links[i])
         }else if(hasNode[start] == undefined && hasNode[end] != undefined){
           //出发点是新点，目的地已经存在了
           hasNode[start] = hasNode[end]
           //加入群落
-          result++
-          document.write(start + "->" + end + ":" + value + "</br>")
+          flag++
+          res.push(links[i])
         }else if(hasNode[start] != undefined&&hasNode[end] == undefined){
           //目的地是新点，出发点已经存在了
           hasNode[end] = hasNode[start]
           //加入群落
-          result++
-          document.write(start + "->" + end + ":" + value + "</br>")
+          flag++
+          res.push(links[i])
         }else if(hasNode[start] != hasNode[end]){
           //如果两个点都是使用过的但是不在一个群落里，那么结束点的群落就加入出发点群落
           let Community = hasNode[end]
@@ -296,14 +295,12 @@ export default {
               hasNode[index] = hasNode[start]
             }
           }
-          result++
-          document.write(start + "->" + end + ":" + value + "</br>");
-        }
-        if (result == NumNodes - 1) {
-          break
+          flag++
+          res.push(links[i])
         }
       }
 
+      return res
     }
   }
 }
