@@ -133,70 +133,9 @@ export default {
       },
       // 结果相关
       resTableData: undefined,
-      resDialogVisible: false
-    }
-  },
-  methods: {
-    /**
-     * 根据ASCII值获取对应的字符
-     * @param index
-     * @returns {string}
-     */
-    getCharByIndex(index) {
-      return String.fromCharCode('A'.charCodeAt(0) + index)
-    },
-    /**
-     * 编辑对话框中，添加边
-     */
-    addLinks() {
-      this.configureForm.links.forEach(item => {
-        item.disabled = true
-      })
-      let tempRow = {
-        start: undefined,
-        end: undefined,
-        value: undefined,
-        disabled: false
-      }
-      this.configureForm.links.push(tempRow)
-    },
-    /**
-     * 读取编辑对话框中的参数，转换为json，传入组件生成图
-     */
-    handleConfigure() {
-      let nodes = []
-      for (let i = 0; i < this.configureForm.nodeNum; i++) {
-        let node = {
-          id: i.toString(),
-          text: this.getCharByIndex(i)
-        }
-        nodes.push(node)
-      }
-      let links = []
-      this.configureForm.links.forEach(item => {
-        let link = {
-          from: item.start.toString(),
-          to: item.end.toString(),
-          text: item.value.toString()
-        }
-        links.push(link)
-      })
-      let rootId = this.configureForm.origin
-      let data = {
-        rootId: rootId,
-        nodes: nodes,
-        links: links
-      }
-      let that = this
-      this.$refs.seeksRelationGraph.setJsonData({...data}, () => {
-        that.configureDialogVisible = false
-      })
-    },
-    /**
-     * 获取图的样例
-     */
-    handleExample() {
-      this.configureForm = {
+      resDialogVisible: false,
+      // 样例
+      configureFormExample1: {
         nodeNum: 6,
         origin: 0,
         links: [
@@ -247,8 +186,79 @@ export default {
           }
         ]
       }
+    }
+  },
+  methods: {
+    /**
+     * 根据ASCII值获取对应的字符
+     * @param index
+     * @returns {string}
+     */
+    getCharByIndex(index) {
+      return String.fromCharCode('A'.charCodeAt(0) + index)
+    },
+    /**
+     * 编辑对话框中，添加边
+     */
+    addLinks() {
+      this.configureForm.links.forEach(item => {
+        item.disabled = true
+      })
+      let tempRow = {
+        start: undefined,
+        end: undefined,
+        value: undefined,
+        disabled: false
+      }
+      this.configureForm.links.push(tempRow)
+    },
+    /**
+     * 将数据转为图组件所需的JSON格式
+     */
+    transformDataToJson(nodeNum, aLinks, rootId) {
+      let nodes = []
+      for (let i = 0; i < nodeNum; i++) {
+        let node = {
+          id: i.toString(),
+          text: this.getCharByIndex(i)
+        }
+        nodes.push(node)
+      }
+      let links = []
+      aLinks.forEach(item => {
+        let link = {
+          from: item.start.toString(),
+          to: item.end.toString(),
+          text: item.value.toString()
+        }
+        links.push(link)
+      })
+      return {
+        rootId: rootId,
+        nodes: nodes,
+        links: links
+      }
+    },
+    /**
+     * 读取编辑对话框中的参数，转换为json，传入组件生成图
+     */
+    handleConfigure() {
+      let data = this.transformDataToJson(this.configureForm.nodeNum, this.configureForm.links, this.configureForm.origin);
+      let that = this
+      this.$refs.seeksRelationGraph.setJsonData({...data}, () => {
+        that.configureDialogVisible = false
+      })
+    },
+    /**
+     * 获取图的样例
+     */
+    handleExample() {
+      this.configureForm = {...this.configureFormExample1}
       this.handleConfigure()
     },
+    /**
+     * 计算并展示计算结果
+     */
     handleCount() {
       this.resTableData = this.count()
       this.resDialogVisible = true

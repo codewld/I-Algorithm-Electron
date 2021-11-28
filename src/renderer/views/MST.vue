@@ -114,6 +114,57 @@ export default {
         nodeNum: undefined,
         origin: undefined,
         links: []
+      },
+      // 样例
+      configureFormExample1: {
+        nodeNum: 6,
+        links: [
+          {
+            start: "0",
+            end: "1",
+            value: "1"
+          },
+          {
+            start: "0",
+            end: "2",
+            value: "2"
+          },
+          {
+            start: "1",
+            end: "2",
+            value: "6"
+          },
+          {
+            start: "1",
+            end: "3",
+            value: "11"
+          },
+          {
+            start: "2",
+            end: "3",
+            value: "9"
+          },
+          {
+            start: "2",
+            end: "4",
+            value: "13"
+          },
+          {
+            start: "3",
+            end: "4",
+            value: "7"
+          },
+          {
+            start: "3",
+            end: "5",
+            value: "3"
+          },
+          {
+            start: "4",
+            end: "5",
+            value: "4"
+          }
+        ]
       }
     }
   },
@@ -182,58 +233,12 @@ export default {
      * 获取图的样例
      */
     handleExample() {
-      this.configureForm = {
-        nodeNum: 6,
-        links: [
-          {
-            start: "0",
-            end: "1",
-            value: "1"
-          },
-          {
-            start: "0",
-            end: "2",
-            value: "2"
-          },
-          {
-            start: "1",
-            end: "2",
-            value: "6"
-          },
-          {
-            start: "1",
-            end: "3",
-            value: "11"
-          },
-          {
-            start: "2",
-            end: "3",
-            value: "9"
-          },
-          {
-            start: "2",
-            end: "4",
-            value: "13"
-          },
-          {
-            start: "3",
-            end: "4",
-            value: "7"
-          },
-          {
-            start: "3",
-            end: "5",
-            value: "3"
-          },
-          {
-            start: "4",
-            end: "5",
-            value: "4"
-          }
-        ]
-      }
+      this.configureForm = {...this.configureFormExample1}
       this.handleConfigure()
     },
+    /**
+     * 计算并展示计算结果
+     */
     handleCount() {
       let links = this.count()
       console.log(links)

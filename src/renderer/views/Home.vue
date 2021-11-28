@@ -1,9 +1,9 @@
 <template>
   <div class="home">
     <div class="button_container">
-      <el-button type="primary" @click="$router.replace('ShortestPath')">最短路径-Dijkstra</el-button>
-      <el-button type="primary" @click="$router.replace('MST')">最小生成树-Kruskal</el-button>
-      <el-button type="primary">213</el-button>
+      <el-button @click="$router.replace('ShortestPath')">最短路径-Dijkstra</el-button>
+      <el-button @click="$router.replace('MST')">最小生成树-Kruskal</el-button>
+      <el-button >213</el-button>
     </div>
   </div>
 </template>
