@@ -8,7 +8,9 @@
     </el-main>
     <el-footer>
       <el-button type="info" @click="configureDialogVisible = true">配 置</el-button>
-      <el-button @click="handleExample">样 例</el-button>
+      <el-button @click="handleExample(0)">样 例 1</el-button>
+      <el-button @click="handleExample(1)">样 例 2</el-button>
+      <el-button @click="handleExample(2)">样 例 3</el-button>
       <el-button type="primary" @click="handleCount">计 算</el-button>
     </el-footer>
 
@@ -94,7 +96,7 @@
     </el-dialog>
     <el-dialog class="resDialog" title="结果" :visible.sync="resDialogVisible" width="60%">
       <h2>源点到其它各点的距离为：</h2>
-      <p v-if="index !== 0" v-for="(item, index) in resTableData" :key="index">源点到点 {{ getCharByIndex(index) }} 的距离为：
+      <p v-for="(item, index) in resTableData" :key="index">源点到点 {{ getCharByIndex(index) }} 的距离为：
         {{ item }}</p>
       <span slot="footer" class="dialog-footer">
         <el-button @click="resDialogVisible = false">关 闭</el-button>
@@ -142,57 +144,141 @@ export default {
       resTableData: undefined,
       resDialogVisible: false,
       // 样例
-      configureFormExample1: {
-        nodeNum: 6,
-        origin: 0,
-        links: [
-          {
-            start: "0",
-            end: "1",
-            value: "1"
-          },
-          {
-            start: "0",
-            end: "2",
-            value: "12"
-          },
-          {
-            start: "1",
-            end: "2",
-            value: "9"
-          },
-          {
-            start: "1",
-            end: "3",
-            value: "3"
-          },
-          {
-            start: "2",
-            end: "4",
-            value: "5"
-          },
-          {
-            start: "3",
-            end: "2",
-            value: "4"
-          },
-          {
-            start: "3",
-            end: "4",
-            value: "13"
-          },
-          {
-            start: "3",
-            end: "5",
-            value: "15"
-          },
-          {
-            start: "4",
-            end: "5",
-            value: "4"
-          }
-        ]
-      }
+      configureFormExample: [
+        {
+          nodeNum: 6,
+          origin: 0,
+          links: [
+            {
+              start: "0",
+              end: "1",
+              value: "1"
+            },
+            {
+              start: "0",
+              end: "2",
+              value: "12"
+            },
+            {
+              start: "1",
+              end: "2",
+              value: "9"
+            },
+            {
+              start: "1",
+              end: "3",
+              value: "3"
+            },
+            {
+              start: "2",
+              end: "4",
+              value: "5"
+            },
+            {
+              start: "3",
+              end: "2",
+              value: "4"
+            },
+            {
+              start: "3",
+              end: "4",
+              value: "13"
+            },
+            {
+              start: "3",
+              end: "5",
+              value: "15"
+            },
+            {
+              start: "4",
+              end: "5",
+              value: "4"
+            }
+          ]
+        },
+        {
+          nodeNum: 6,
+          origin: 0,
+          links: [
+            {
+              start: "0",
+              end: "1",
+              value: "1"
+            },
+            {
+              start: "0",
+              end: "2",
+              value: "2"
+            },
+            {
+              start: "1",
+              end: "2",
+              value: "1"
+            },
+            {
+              start: "1",
+              end: "3",
+              value: "3"
+            },
+            {
+              start: "1",
+              end: "5",
+              value: "7"
+            },
+            {
+              start: "2",
+              end: "3",
+              value: "1"
+            },
+            {
+              start: "2",
+              end: "4",
+              value: "2"
+            },
+            {
+              start: "3",
+              end: "5",
+              value: "3"
+            },
+            {
+              start: "4",
+              end: "5",
+              value: "6"
+            }
+          ]
+        },
+        {
+          nodeNum: 4,
+          origin: 2,
+          links: [
+            {
+              start: "0",
+              end: "1",
+              value: "4"
+            },
+            {
+              start: "1",
+              end: "0",
+              value: "3"
+            },
+            {
+              start: "2",
+              end: "0",
+              value: "9"
+            },
+            {
+              start: "2",
+              end: "3",
+              value: "1"
+            },
+            {
+              start: "3",
+              end: "1",
+              value: "7"
+            }
+          ]
+        }
+      ]
     }
   },
   methods: {
@@ -227,7 +313,8 @@ export default {
       for (let i = 0; i < nodeNum; i++) {
         let node = {
           id: i.toString(),
-          text: this.getCharByIndex(i)
+          text: this.getCharByIndex(i),
+          color: i === rootId ? '#FF0000' : undefined
         }
         nodes.push(node)
       }
@@ -259,8 +346,8 @@ export default {
     /**
      * 获取图的样例
      */
-    handleExample() {
-      this.configureForm = {...this.configureFormExample1}
+    handleExample(index) {
+      this.configureForm = {...this.configureFormExample[index]}
       this.handleConfigure()
     },
     /**
