@@ -13,7 +13,6 @@
     </el-footer>
 
     <el-dialog title="配置" :visible.sync="configureDialogVisible" width="80%">
-      {{configureForm}}
       <el-tabs v-model="configureTabName" type="card">
         <el-tab-pane label="点配置" name="1">
           <el-form ref="form" :model="configureForm" label-width="80px">
@@ -231,7 +230,7 @@ export default {
      * 读取编辑对话框中的参数，转换为json，传入组件生成图
      */
     handleConfigure() {
-      let data = this.transformDataToJson(this.configureForm.nodeNum, this.configureForm.links, this.configureForm.origin);
+      let data = this.transformDataToJson(this.configureForm.nodeNum, this.configureForm.links, this.configureForm.origin)
       let that = this
       this.$refs.seeksRelationGraph.setJsonData({...data}, () => {
         that.configureDialogVisible = false
@@ -250,7 +249,7 @@ export default {
     handleCount() {
       let links = this.count()
       console.log(links)
-      let data = this.transformDataToJson(this.configureForm.nodeNum, links, this.configureForm.origin);
+      let data = this.transformDataToJson(this.configureForm.nodeNum, links, this.configureForm.origin)
       let that = this
       this.$refs.seeksRelationGraph.setJsonData({...data}, () => {
         that.configureDialogVisible = false
@@ -274,37 +273,32 @@ export default {
       let res = []
 
       for (let i = 0; i < linkNum && flag < nodeNum - 1; i++) {
-        let start = links[i].start;
-        let end = links[i].end;
-        let value = links[i].value;
+        let start = links[i].start
+        let end = links[i].end
         //这要起点和重点不是同时在同一个群落中即可
-        if(hasNode[start] == undefined && hasNode[end] == undefined){
+        if (hasNode[start] === undefined && hasNode[end] === undefined) {
           //如果两个点都是没有使用过的点直接加入形成新群落
           let length = 0
-          for(let index in hasNode){
+          for (let index in hasNode) {
             length++
           }
           hasNode[start] = length
           hasNode[end] = length
           flag++
           res.push(links[i])
-        }else if(hasNode[start] == undefined && hasNode[end] != undefined){
-          //出发点是新点，目的地已经存在了
+        } else if (hasNode[start] === undefined && hasNode[end] !== undefined) {
           hasNode[start] = hasNode[end]
-          //加入群落
           flag++
           res.push(links[i])
-        }else if(hasNode[start] != undefined&&hasNode[end] == undefined){
-          //目的地是新点，出发点已经存在了
+        } else if (hasNode[start] !== undefined && hasNode[end] === undefined) {
           hasNode[end] = hasNode[start]
-          //加入群落
           flag++
           res.push(links[i])
-        }else if(hasNode[start] != hasNode[end]){
+        } else if (hasNode[start] !== hasNode[end]) {
           //如果两个点都是使用过的但是不在一个群落里，那么结束点的群落就加入出发点群落
           let Community = hasNode[end]
-          for(let index in hasNode){
-            if(hasNode[index] == Community){
+          for (let index in hasNode) {
+            if (hasNode[index] === Community) {
               hasNode[index] = hasNode[start]
             }
           }
@@ -312,7 +306,6 @@ export default {
           res.push(links[i])
         }
       }
-
       return res
     }
   }
