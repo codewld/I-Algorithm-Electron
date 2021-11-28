@@ -95,9 +95,10 @@
       </span>
     </el-dialog>
     <el-dialog v-drag class="resDialog" title="结果" :visible.sync="resDialogVisible" width="60%">
-      <h2>源点到其它各点的距离为：</h2>
-      <p v-for="(item, index) in resTableData" :key="index">源点到点 {{ getCharByIndex(index) }} 的距离为：
-        {{ item }}</p>
+      <h2>源点为：{{ getCharByIndex(configureForm.origin) }}</h2>
+      <h2>到其它各点的距离为：</h2>
+      <p v-if="configureForm.origin !== index" v-for="(item, index) in resTableData" :key="index">源点到点
+        {{ getCharByIndex(index) }} 的距离为： {{ item }}</p>
       <span slot="footer" class="dialog-footer">
         <el-button @click="resDialogVisible = false">关 闭</el-button>
       </span>
