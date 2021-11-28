@@ -14,7 +14,7 @@
       <el-button type="primary" @click="handleCount">计 算</el-button>
     </el-footer>
 
-    <el-dialog title="配置" :visible.sync="configureDialogVisible" width="80%">
+    <el-dialog v-drag title="配置" :visible.sync="configureDialogVisible" width="80%">
       <el-tabs v-model="configureTabName" type="card">
         <el-tab-pane label="点配置" name="1">
           <el-form ref="form" :model="configureForm" label-width="80px">

@@ -14,7 +14,7 @@
       <el-button type="primary" @click="handleCount">计 算</el-button>
     </el-footer>
 
-    <el-dialog title="配置" :visible.sync="configureDialogVisible" width="80%">
+    <el-dialog v-drag title="配置" :visible.sync="configureDialogVisible" width="80%">
       <el-tabs v-model="configureTabName" type="card">
         <el-tab-pane label="点配置" name="1">
           <el-form ref="form" :model="configureForm" label-width="80px">
@@ -94,7 +94,7 @@
         <el-button type="primary" @click="handleConfigure">保存</el-button>
       </span>
     </el-dialog>
-    <el-dialog class="resDialog" title="结果" :visible.sync="resDialogVisible" width="60%">
+    <el-dialog v-drag class="resDialog" title="结果" :visible.sync="resDialogVisible" width="60%">
       <h2>源点到其它各点的距离为：</h2>
       <p v-for="(item, index) in resTableData" :key="index">源点到点 {{ getCharByIndex(index) }} 的距离为：
         {{ item }}</p>

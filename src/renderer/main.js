@@ -3,7 +3,8 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 
-// import '@assets/base.css'
+
+import '@/utils/directives.js'
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.config.productionTip = false
