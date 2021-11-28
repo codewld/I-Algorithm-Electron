@@ -7,8 +7,8 @@
       <div class="button" @click="$router.replace('MST')">
         最小生成树-Kruskal
       </div>
-      <div class="button">
-        最短路径-Dijkstra
+      <div class="button" @click="$router.replace('MaxMatch')">
+        最大匹配-匈牙利算法
       </div>
     </div>
   </div>

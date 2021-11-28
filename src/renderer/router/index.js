@@ -3,6 +3,7 @@ import Router from 'vue-router'
 const Home = require('@/views/Home').default
 const ShortestPath = require('@/views/ShortestPath').default
 const MST = require('@/views/MST').default
+const MaxMatch = require('@/views/MaxMatch').default
 
 Vue.use(Router)
 
@@ -22,6 +23,11 @@ export default new Router({
       path: '/MST',
       name: 'MST',
       component: MST
+    },
+    {
+      path: '/MaxMatch',
+      name: 'MaxMatch',
+      component: MaxMatch
     },
     {
       path: '*',
