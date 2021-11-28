@@ -8,7 +8,9 @@
     </el-main>
     <el-footer>
       <el-button type="info" @click="configureDialogVisible = true">配 置</el-button>
-      <el-button @click="handleExample">样 例</el-button>
+      <el-button @click="handleExample(0)">样 例 1</el-button>
+      <el-button @click="handleExample(1)">样 例 2</el-button>
+      <el-button @click="handleExample(2)">样 例 3</el-button>
       <el-button type="primary" @click="handleCount">计 算</el-button>
     </el-footer>
 
@@ -123,56 +125,173 @@ export default {
         links: []
       },
       // 样例
-      configureFormExample1: {
-        nodeNum: 6,
-        links: [
-          {
-            start: "0",
-            end: "1",
-            value: "1"
-          },
-          {
-            start: "0",
-            end: "2",
-            value: "2"
-          },
-          {
-            start: "1",
-            end: "2",
-            value: "6"
-          },
-          {
-            start: "1",
-            end: "3",
-            value: "11"
-          },
-          {
-            start: "2",
-            end: "3",
-            value: "9"
-          },
-          {
-            start: "2",
-            end: "4",
-            value: "13"
-          },
-          {
-            start: "3",
-            end: "4",
-            value: "7"
-          },
-          {
-            start: "3",
-            end: "5",
-            value: "3"
-          },
-          {
-            start: "4",
-            end: "5",
-            value: "4"
-          }
-        ]
-      }
+      configureFormExample: [
+        {
+          nodeNum: 6,
+          links: [
+            {
+              start: "0",
+              end: "1",
+              value: "1"
+            },
+            {
+              start: "0",
+              end: "2",
+              value: "2"
+            },
+            {
+              start: "1",
+              end: "2",
+              value: "6"
+            },
+            {
+              start: "1",
+              end: "3",
+              value: "11"
+            },
+            {
+              start: "2",
+              end: "3",
+              value: "9"
+            },
+            {
+              start: "2",
+              end: "4",
+              value: "13"
+            },
+            {
+              start: "3",
+              end: "4",
+              value: "7"
+            },
+            {
+              start: "3",
+              end: "5",
+              value: "3"
+            },
+            {
+              start: "4",
+              end: "5",
+              value: "4"
+            }
+          ]
+        },
+        {
+          nodeNum: 4,
+          links: [
+            {
+              start: "0",
+              end: "1",
+              value: "20"
+            },
+            {
+              start: "0",
+              end: "2",
+              value: "1"
+            },
+            {
+              start: "1",
+              end: "2",
+              value: "6"
+            },
+            {
+              start: "1",
+              end: "3",
+              value: "11"
+            },
+            {
+              start: "2",
+              end: "3",
+              value: "9"
+            }
+          ]
+        },
+        {
+          nodeNum: 7,
+          links: [
+            {
+              start: "0",
+              end: "1",
+              value: "20"
+            },
+            {
+              start: "0",
+              end: "2",
+              value: "31"
+            },
+            {
+              start: "0",
+              end: "4",
+              value: "1"
+            },
+            {
+              start: "0",
+              end: "5",
+              value: "60"
+            },
+            {
+              start: "0",
+              end: "6",
+              value: "11"
+            },
+            {
+              start: "1",
+              end: "2",
+              value: "50"
+            },
+            {
+              start: "1",
+              end: "3",
+              value: "11"
+            },
+            {
+              start: "1",
+              end: "6",
+              value: "3"
+            },
+            {
+              start: "2",
+              end: "3",
+              value: "3"
+            },
+            {
+              start: "2",
+              end: "4",
+              value: "4"
+            },
+            {
+              start: "2",
+              end: "5",
+              value: "5"
+            },
+            {
+              start: "2",
+              end: "6",
+              value: "6"
+            },
+            {
+              start: "3",
+              end: "5",
+              value: "6"
+            },
+            {
+              start: "3",
+              end: "6",
+              value: "50"
+            },
+            {
+              start: "4",
+              end: "6",
+              value: "25"
+            },
+            {
+              start: "5",
+              end: "6",
+              value: "30"
+            }
+          ]
+        }
+      ]
     }
   },
   methods: {
@@ -239,8 +358,8 @@ export default {
     /**
      * 获取图的样例
      */
-    handleExample() {
-      this.configureForm = {...this.configureFormExample1}
+    handleExample(index) {
+      this.configureForm = {...this.configureFormExample[index]}
       this.handleConfigure()
     },
     /**
