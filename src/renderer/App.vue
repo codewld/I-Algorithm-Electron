@@ -11,6 +11,9 @@
 </script>
 
 <style>
+text {
+  font-size: 20px !important;
+}
 /*清除元素默认的内外边距  */
 * {
   margin: 0;

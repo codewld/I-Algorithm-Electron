@@ -104,7 +104,7 @@ export default {
         allowShowMiniNameFilter: false,
         allowSwitchLineShape: false,
         allowSwitchJunctionPoint: false,
-        moveToCenterWhenResize: false,
+        moveToCenterWhenResize: true,
         defaultFocusRootNode: false,
         allowShowZoomMenu: false,
         defaultJunctionPoint: 'border',
@@ -335,7 +335,8 @@ export default {
         let link = {
           from: item.start.toString(),
           to: item.end.toString(),
-          text: item.value.toString()
+          text: item.value.toString(),
+          isHideArrow: true
         }
         links.push(link)
       })

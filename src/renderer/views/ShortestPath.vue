@@ -121,7 +121,7 @@ export default {
         allowShowMiniNameFilter: false,
         allowSwitchLineShape: false,
         allowSwitchJunctionPoint: false,
-        moveToCenterWhenResize: false,
+        moveToCenterWhenResize: true,
         defaultFocusRootNode: false,
         allowShowZoomMenu: false,
         defaultJunctionPoint: 'border',
