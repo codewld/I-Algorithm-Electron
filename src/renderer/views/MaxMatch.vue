@@ -159,117 +159,101 @@ export default {
           ]
         },
         {
-          nodeNum: 7,
+          nodeNum: 10,
           links: [
             {
               start: "0",
-              end: "1"
-            },
-            {
-              start: "0",
-              end: "3"
-            },
-            {
-              start: "0",
-              end: "6"
+              end: "9"
             },
             {
               start: "1",
-              end: "2"
+              end: "7"
+            },
+            {
+              start: "2",
+              end: "8"
+            },
+            {
+              start: "2",
+              end: "9"
             },
             {
               start: "3",
               end: "5"
             },
             {
-              start: "6",
-              end: "4"
+              start: "3",
+              end: "6"
+            },
+            {
+              start: "3",
+              end: "8"
+            },
+            {
+              start: "4",
+              end: "5"
+            },
+            {
+              start: "4",
+              end: "6"
+            },
+            {
+              start: "4",
+              end: "7"
             }
           ]
         },
         {
-          nodeNum: 7,
+          nodeNum: 10,
           links: [
             {
               start: "0",
-              end: "1",
-              value: "20"
+              end: "6"
             },
             {
               start: "0",
-              end: "2",
-              value: "31"
-            },
-            {
-              start: "0",
-              end: "4",
-              value: "1"
-            },
-            {
-              start: "0",
-              end: "5",
-              value: "60"
-            },
-            {
-              start: "0",
-              end: "6",
-              value: "11"
+              end: "7"
             },
             {
               start: "1",
-              end: "2",
-              value: "50"
+              end: "5"
             },
             {
               start: "1",
-              end: "3",
-              value: "11"
+              end: "6"
             },
             {
               start: "1",
-              end: "6",
-              value: "3"
+              end: "8"
+            },
+            {
+              start: "1",
+              end: "9"
             },
             {
               start: "2",
-              end: "3",
-              value: "3"
+              end: "6"
             },
             {
               start: "2",
-              end: "4",
-              value: "4"
-            },
-            {
-              start: "2",
-              end: "5",
-              value: "5"
-            },
-            {
-              start: "2",
-              end: "6",
-              value: "6"
+              end: "7"
             },
             {
               start: "3",
-              end: "5",
-              value: "6"
+              end: "6"
             },
             {
               start: "3",
-              end: "6",
-              value: "50"
+              end: "7"
             },
             {
               start: "4",
-              end: "6",
-              value: "25"
+              end: "8"
             },
             {
-              start: "5",
-              end: "6",
-              value: "30"
-            }
+              start: "4",
+              end: "9"
+            },
           ]
         }
       ]
@@ -304,14 +288,9 @@ export default {
      */
     transformDataToJson(nodeNum, aLinks, rootId) {
       function isStart(node) {
-        console.log(node)
-        console.log(links)
         let res =  links.some(item => {
           return item.from == node
         })
-        if (res) {
-          console.log(node + "是start")
-        }
         return res
       }
 
@@ -327,22 +306,24 @@ export default {
         }
         links.push(link)
       })
-      console.log("links")
-      console.log(links)
       let nodes = []
       for (let i = 0; i < nodeNum; i++) {
         let node = {
           id: i.toString(),
           text: this.getCharByIndex(i),
           x: isStart(i) ? center_x - 100 : center_x + 100,
-          y: center_y + i * 200
+          y: center_y + i * 50
         }
         nodes.push(node)
       }
-      console.log("nodes:")
+      nodes.push({
+        id: "root"
+      })
+      console.log("----node----")
       console.log(nodes)
+      console.log("----node----")
       return {
-        rootId: rootId,
+        rootId: rootId ? rootId + 1 : 0,
         nodes: nodes,
         links: links
       }
@@ -385,13 +366,9 @@ export default {
      * 计算并展示计算结果
      */
     handleCount() {
-      let links = []
+      // 根据匹配数组获取边
       let match = this.count()
-      console.log("-----")
-      console.log(match)
-      console.log("-----")
-      // console.log("---------------")
-      // console.log(match)
+      let links = []
       for (let i = 0; i < match.length; i++) {
         if (match[i] !== -1) {
           let node1 = i
@@ -400,43 +377,43 @@ export default {
             start: node1,
             end: node2
           })
-          // console.log(links)
           match[node2] = -1
-          // console.log(match)
         }
       }
-      // let data = this.transformDataToJson(this.configureForm.nodeNum, links, this.configureForm.origin)
-      // let that = this
-      // this.$refs.seeksRelationGraph.setJsonData({...data}, () => {
-      //   that.configureDialogVisible = false
-      // })
-      // this.$refs.seeksRelationGraph.setOptions(
-      //   {
-      //     allowShowMiniToolBar: false,
-      //     allowShowMiniNameFilter: false,
-      //     allowSwitchLineShape: false,
-      //     allowSwitchJunctionPoint: false,
-      //     moveToCenterWhenResize: false,
-      //     defaultFocusRootNode: false,
-      //     allowShowZoomMenu: false,
-      //     defaultJunctionPoint: 'border',
-      //     layouts: [
-      //       {
-      //         'label': '手工',
-      //         'layoutName': 'fixed',
-      //         'layoutClassName': 'seeks-layout-fixed',
-      //         'defaultJunctionPoint': 'border',
-      //         'defaultNodeShape': 0,
-      //         'defaultLineShape': 1
-      //       }
-      //     ]
-      //   }, () => {})
+      let data = this.transformDataToJson(this.configureForm.nodeNum, links, this.configureForm.origin)
+      let that = this
+      this.$refs.seeksRelationGraph.setJsonData({...data}, () => {
+        that.configureDialogVisible = false
+        this.$refs.seeksRelationGraph.setOptions(
+          {
+            allowShowMiniToolBar: false,
+            allowShowMiniNameFilter: false,
+            allowSwitchLineShape: false,
+            allowSwitchJunctionPoint: false,
+            moveToCenterWhenResize: false,
+            defaultFocusRootNode: false,
+            allowShowZoomMenu: false,
+            defaultJunctionPoint: 'border',
+            isMoveByParentNode: false,
+            allowAutoLayoutIfSupport: false,
+            layouts: [
+              {
+                'label': '手工',
+                'layoutName': 'fixed',
+                'layoutClassName': 'seeks-layout-fixed',
+                'defaultJunctionPoint': 'border',
+                'defaultNodeShape': 0,
+                'defaultLineShape': 1
+              }
+            ]
+          }, () => {})
+      })
+
     },
     /**
      * 计算最大匹配
      */
     count() {
-      let that = this
       /**
        * 找到点的匹配点
        */
@@ -460,7 +437,7 @@ export default {
        */
       function connectable(u, v) {
         return links.some(item => {
-          if ((item.start == u && item.end == v) || (item.start == v && item.end == u)) {
+          if (item.start == u && item.end == v) {
             return true
           }
           return false
@@ -477,11 +454,15 @@ export default {
       let sum = 0
       let match = new Array(nodeNum).fill(-1)
       let flag
-      for (let i = 0; i < linkNum; i++) {
+      for (let i = 0; i <= linkNum / 2; i++) {
         // 标记数组，标记点是否已经加入匹配
         flag = new Array(nodeNum).fill(-1)
         sum += dfs(i)
       }
+
+      console.log("---sum---")
+      console.log(sum)
+      console.log("---sum---")
 
       return match
     }
