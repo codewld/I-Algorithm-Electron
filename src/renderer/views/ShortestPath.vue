@@ -8,7 +8,7 @@
     </el-main>
     <el-footer>
       <el-button type="info" @click="configureDialogVisible = true">配 置</el-button>
-      <el-button type="info" @click="handleExample">样 例</el-button>
+      <el-button @click="handleExample">样 例</el-button>
       <el-button type="primary" @click="handleCount">计 算</el-button>
     </el-footer>
 
