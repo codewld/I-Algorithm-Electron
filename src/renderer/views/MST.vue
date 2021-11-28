@@ -260,52 +260,54 @@ export default {
      * 计算最小生成树
      */
     count() {
+      /**
+       * 合并树
+       */
+      function merge(start, end) {
+        // 获取根节点
+        let father1 = father[start]
+        let father2 = father[end]
+        // 当两个根节点不同时，说明是两棵树，合并；
+        // 当两个根节点相同时，拒绝合并
+        if (father1 !== father2) {
+          father[father2] = father1
+          return true
+        }
+        return false
+      }
+
+      /**
+       * 寻找根节点
+       */
+      function findFather(node) {
+        if (father[node] === node) {
+          return node
+        } else {
+          return findFather(father[node])
+        }
+      }
+
+      // 初始化
       let nodeNum = parseInt(this.configureForm.nodeNum)
       let links = Array.from(this.configureForm.links)
       links.sort((a, b) => {
         return a.value - b.value
       })
       let linkNum = links.length
-      let flag = 0
+      let father = []
+      for (let i = 0; i < nodeNum; i++) {
+        father.push(i)
+      }
 
-      //记录已经加入的点
-      let hasNode = {}
+
+      // 计算
       let res = []
-
-      for (let i = 0; i < linkNum && flag < nodeNum - 1; i++) {
-        let start = links[i].start
-        let end = links[i].end
-        //这要起点和重点不是同时在同一个群落中即可
-        if (hasNode[start] === undefined && hasNode[end] === undefined) {
-          //如果两个点都是没有使用过的点直接加入形成新群落
-          let length = 0
-          for (let index in hasNode) {
-            length++
-          }
-          hasNode[start] = length
-          hasNode[end] = length
-          flag++
-          res.push(links[i])
-        } else if (hasNode[start] === undefined && hasNode[end] !== undefined) {
-          hasNode[start] = hasNode[end]
-          flag++
-          res.push(links[i])
-        } else if (hasNode[start] !== undefined && hasNode[end] === undefined) {
-          hasNode[end] = hasNode[start]
-          flag++
-          res.push(links[i])
-        } else if (hasNode[start] !== hasNode[end]) {
-          //如果两个点都是使用过的但是不在一个群落里，那么结束点的群落就加入出发点群落
-          let Community = hasNode[end]
-          for (let index in hasNode) {
-            if (hasNode[index] === Community) {
-              hasNode[index] = hasNode[start]
-            }
-          }
-          flag++
+      for (let i = 0; i < linkNum && res.length < nodeNum - 1; i++) {
+        if (merge(links[i].start, links[i].end)) {
           res.push(links[i])
         }
       }
+
       return res
     }
   }
