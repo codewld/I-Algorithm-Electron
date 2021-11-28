@@ -279,7 +279,8 @@ export default {
       let nodeNum = parseInt(this.configureForm.nodeNum)
       let origin = parseInt(this.configureForm.origin)
 
-      // 初始化距离数组
+      // 初始化
+      // 初始化点到点的距离
       let distance = []
       for (let i = 0; i < nodeNum; i++) {
         let item = new Array(nodeNum).fill(max)
@@ -289,14 +290,12 @@ export default {
       this.configureForm.links.forEach(item => {
         distance[item.start][item.end] = parseInt(item.value)
       })
-
-      // 初始化结果数组
-      let res = new Array(nodeNum)
+      // 初始化点到源点的距离
+      let distanceToOrigin = new Array(nodeNum)
       for (let i = 0; i < nodeNum; i++) {
-        res[i] = distance[origin][i]
+        distanceToOrigin[i] = distance[origin][i]
       }
-
-      // 初始化标记数组
+      // 初始化标记数组，用于标识点的最短路径是否已找到
       let flag = new Array(nodeNum).fill(0)
       flag[origin] = 1
 
@@ -304,24 +303,22 @@ export default {
       for (let i = 0; i < nodeNum; i++) {
         let min = max
         let tempNode
-        // 找到距离源点最近的点，加入
+        // 找到距源点最近的点，加入
         for (let j = 0; j < nodeNum; j++) {
-          if (flag[j] === 0 && res[j] < min) {
-            min = res[j]
+          if (flag[j] === 0 && distanceToOrigin[j] < min) {
+            min = distanceToOrigin[j]
             tempNode = j
           }
         }
         flag[tempNode] = 1
         // 根据新加入的点更新点到源点的距离
         for (let j = 0; j < nodeNum; j++) {
-          if (flag[j] === 0 && distance[tempNode][j] < max) {
-            if (res[j] > res[tempNode] + distance[tempNode][j]) {
-              res[j] = res[tempNode] + distance[tempNode][j]
-            }
+          if (flag[j] === 0 && distance[tempNode][j] < max && distanceToOrigin[j] > distanceToOrigin[tempNode] + distance[tempNode][j]) {
+            distanceToOrigin[j] = distanceToOrigin[tempNode] + distance[tempNode][j]
           }
         }
       }
-      return res
+      return distanceToOrigin
     }
   }
 }
