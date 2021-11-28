@@ -107,7 +107,7 @@ export default {
         allowShowMiniNameFilter: false,
         allowSwitchLineShape: false,
         allowSwitchJunctionPoint: false,
-        moveToCenterWhenResize: true,
+        moveToCenterWhenResize: false,
         defaultFocusRootNode: false,
         allowShowZoomMenu: false,
         defaultJunctionPoint: 'border',
@@ -138,78 +138,52 @@ export default {
           links: [
             {
               start: "0",
-              end: "1",
-              value: "1"
+              end: "3"
             },
             {
               start: "0",
-              end: "2",
-              value: "2"
+              end: "4"
             },
             {
               start: "1",
-              end: "2",
-              value: "6"
+              end: "4"
             },
             {
               start: "1",
-              end: "3",
-              value: "11"
+              end: "5"
             },
             {
               start: "2",
-              end: "3",
-              value: "9"
-            },
-            {
-              start: "2",
-              end: "4",
-              value: "13"
-            },
-            {
-              start: "3",
-              end: "4",
-              value: "7"
-            },
-            {
-              start: "3",
-              end: "5",
-              value: "3"
-            },
-            {
-              start: "4",
-              end: "5",
-              value: "4"
+              end: "3"
             }
           ]
         },
         {
-          nodeNum: 4,
+          nodeNum: 7,
           links: [
             {
               start: "0",
-              end: "1",
-              value: "20"
+              end: "1"
             },
             {
               start: "0",
-              end: "2",
-              value: "1"
+              end: "3"
+            },
+            {
+              start: "0",
+              end: "6"
             },
             {
               start: "1",
-              end: "2",
-              value: "6"
+              end: "2"
             },
             {
-              start: "1",
-              end: "3",
-              value: "11"
+              start: "3",
+              end: "5"
             },
             {
-              start: "2",
-              end: "3",
-              value: "9"
+              start: "6",
+              end: "4"
             }
           ]
         },
@@ -329,24 +303,44 @@ export default {
      * 将数据转为图组件所需的JSON格式
      */
     transformDataToJson(nodeNum, aLinks, rootId) {
-      let nodes = []
-      for (let i = 0; i < nodeNum; i++) {
-        let node = {
-          id: i.toString(),
-          text: this.getCharByIndex(i)
+      function isStart(node) {
+        console.log(node)
+        console.log(links)
+        let res =  links.some(item => {
+          return item.from == node
+        })
+        if (res) {
+          console.log(node + "是start")
         }
-        nodes.push(node)
+        return res
       }
+
+      let center_x = this.$refs.seeksRelationGraph.graphSetting.viewSize.width / 2 - this.$refs.seeksRelationGraph.graphSetting.canvasOffset.x
+      let center_y = this.$refs.seeksRelationGraph.graphSetting.viewSize.height / 2 - this.$refs.seeksRelationGraph.graphSetting.canvasOffset.y
+
       let links = []
       aLinks.forEach(item => {
         let link = {
           from: item.start.toString(),
           to: item.end.toString(),
-          text: item.value.toString(),
           isHideArrow: true
         }
         links.push(link)
       })
+      console.log("links")
+      console.log(links)
+      let nodes = []
+      for (let i = 0; i < nodeNum; i++) {
+        let node = {
+          id: i.toString(),
+          text: this.getCharByIndex(i),
+          x: isStart(i) ? center_x - 100 : center_x + 100,
+          y: center_y + i * 200
+        }
+        nodes.push(node)
+      }
+      console.log("nodes:")
+      console.log(nodes)
       return {
         rootId: rootId,
         nodes: nodes,
@@ -361,6 +355,23 @@ export default {
       let that = this
       this.$refs.seeksRelationGraph.setJsonData({...data}, () => {
         that.configureDialogVisible = false
+        this.$refs.seeksRelationGraph.setOptions({
+          allowShowMiniToolBar: false,
+          allowShowMiniNameFilter: false,
+          allowSwitchLineShape: false,
+          allowSwitchJunctionPoint: false,
+          moveToCenterWhenResize: false,
+          defaultFocusRootNode: false,
+          allowShowZoomMenu: false,
+          defaultJunctionPoint: 'border',
+          layouts: [
+            {
+              'label': '自动布局',
+              'layoutName': 'force',
+              'layoutClassName': 'seeks-layout-force'
+            }
+          ]
+        }, () => {})
       })
     },
     /**
@@ -374,68 +385,105 @@ export default {
      * 计算并展示计算结果
      */
     handleCount() {
-      let links = this.count()
-      console.log(links)
-      let data = this.transformDataToJson(this.configureForm.nodeNum, links, this.configureForm.origin)
-      let that = this
-      this.$refs.seeksRelationGraph.setJsonData({...data}, () => {
-        that.configureDialogVisible = false
-      })
-
+      let links = []
+      let match = this.count()
+      console.log("-----")
+      console.log(match)
+      console.log("-----")
+      // console.log("---------------")
+      // console.log(match)
+      for (let i = 0; i < match.length; i++) {
+        if (match[i] !== -1) {
+          let node1 = i
+          let node2 = match[i]
+          links.push({
+            start: node1,
+            end: node2
+          })
+          // console.log(links)
+          match[node2] = -1
+          // console.log(match)
+        }
+      }
+      // let data = this.transformDataToJson(this.configureForm.nodeNum, links, this.configureForm.origin)
+      // let that = this
+      // this.$refs.seeksRelationGraph.setJsonData({...data}, () => {
+      //   that.configureDialogVisible = false
+      // })
+      // this.$refs.seeksRelationGraph.setOptions(
+      //   {
+      //     allowShowMiniToolBar: false,
+      //     allowShowMiniNameFilter: false,
+      //     allowSwitchLineShape: false,
+      //     allowSwitchJunctionPoint: false,
+      //     moveToCenterWhenResize: false,
+      //     defaultFocusRootNode: false,
+      //     allowShowZoomMenu: false,
+      //     defaultJunctionPoint: 'border',
+      //     layouts: [
+      //       {
+      //         'label': '手工',
+      //         'layoutName': 'fixed',
+      //         'layoutClassName': 'seeks-layout-fixed',
+      //         'defaultJunctionPoint': 'border',
+      //         'defaultNodeShape': 0,
+      //         'defaultLineShape': 1
+      //       }
+      //     ]
+      //   }, () => {})
     },
     /**
-     * 计算最小生成树
+     * 计算最大匹配
      */
     count() {
+      let that = this
       /**
-       * 合并树
+       * 找到点的匹配点
        */
-      function merge(start, end) {
-        // 获取根节点
-        let father1 = father[start]
-        let father2 = father[end]
-        // 当两个根节点不同时，说明是两棵树，合并；
-        // 当两个根节点相同时，拒绝合并
-        if (father1 !== father2) {
-          father[father2] = father1
-          return true
+      function dfs(node) {
+        for (let i = 0; i < nodeNum; i++) {
+          // 如果点未加入匹配且可连接
+          if (flag[i] === -1 && connectable(node, i)) {
+            flag[i] = 1;
+            if (match[i] === -1 || dfs(match[i])) {
+              match[i] = node
+              match[node] = i
+              return true
+            }
+          }
         }
         return false
       }
 
       /**
-       * 寻找根节点
+       * 判断两个点是否可连接
        */
-      function findFather(node) {
-        if (father[node] === node) {
-          return node
-        } else {
-          return findFather(father[node])
-        }
+      function connectable(u, v) {
+        return links.some(item => {
+          if ((item.start == u && item.end == v) || (item.start == v && item.end == u)) {
+            return true
+          }
+          return false
+        })
       }
 
       // 初始化
       let nodeNum = parseInt(this.configureForm.nodeNum)
       let links = Array.from(this.configureForm.links)
-      links.sort((a, b) => {
-        return a.value - b.value
-      })
       let linkNum = links.length
-      let father = []
-      for (let i = 0; i < nodeNum; i++) {
-        father.push(i)
-      }
 
 
       // 计算
-      let res = []
-      for (let i = 0; i < linkNum && res.length < nodeNum - 1; i++) {
-        if (merge(links[i].start, links[i].end)) {
-          res.push(links[i])
-        }
+      let sum = 0
+      let match = new Array(nodeNum).fill(-1)
+      let flag
+      for (let i = 0; i < linkNum; i++) {
+        // 标记数组，标记点是否已经加入匹配
+        flag = new Array(nodeNum).fill(-1)
+        sum += dfs(i)
       }
 
-      return res
+      return match
     }
   }
 }
