@@ -7,11 +7,16 @@
       <SeeksRelationGraph ref="seeksRelationGraph" :options="graphOptions"/>
     </el-main>
     <el-footer>
-      <el-button type="info" @click="configureDialogVisible = true">配 置</el-button>
-      <el-button @click="handleExample(0)">样 例 1</el-button>
-      <el-button @click="handleExample(1)">样 例 2</el-button>
-      <el-button @click="handleExample(2)">样 例 3</el-button>
-      <el-button type="primary" @click="handleCount">计 算</el-button>
+      <div class="button_group_left">
+        <el-button @click="handleExample(1)">样 例 1</el-button>
+        <el-button @click="handleExample(2)">样 例 2</el-button>
+        <el-button @click="handleExample(3)">样 例 3</el-button>
+      </div>
+      <div class="button_group_right">
+        <el-button type="info" @click="configureDialogVisible = true">配 置</el-button>
+        <el-button type="warning" @click="handleExample(0)">清 空</el-button>
+        <el-button type="primary" @click="handleCount">计 算</el-button>
+      </div>
     </el-footer>
 
     <el-dialog v-drag title="配置" :visible.sync="configureDialogVisible" width="80%">
@@ -19,7 +24,6 @@
         <el-tab-pane label="点配置" name="1">
           <el-form ref="form" :model="configureForm" label-width="80px">
             <el-form-item label="顶点数">
-              <!--<el-input v-model="configureForm.nodeNum"></el-input>-->
               <el-select v-model="configureForm.nodeNum" placeholder="请选择">
                 <el-option
                   v-for="item in 8"
@@ -146,6 +150,11 @@ export default {
       resDialogVisible: false,
       // 样例
       configureFormExample: [
+        {
+          nodeNum: 0,
+          origin: undefined,
+          links: []
+        },
         {
           nodeNum: 6,
           origin: 0,
@@ -315,7 +324,8 @@ export default {
         let node = {
           id: i.toString(),
           text: this.getCharByIndex(i),
-          color: i === rootId ? '#FF0000' : undefined
+          color: i === rootId ? '#FF0000' : undefined,
+          borderColor: i === rootId ? '#FF0000' : undefined
         }
         nodes.push(node)
       }
@@ -422,11 +432,11 @@ export default {
   }
 
   .el-footer {
-    padding: 0 50px;
+    padding: 0 10px;
     border-top: 1px solid #e6e6e6;
     box-sizing: border-box;
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
   }
 
