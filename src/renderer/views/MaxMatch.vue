@@ -316,14 +316,11 @@ export default {
         }
         nodes.push(node)
       }
-      nodes.push({
-        id: "root"
-      })
       console.log("----node----")
       console.log(nodes)
       console.log("----node----")
       return {
-        rootId: rootId ? rootId + 1 : 0,
+        rootId: rootId,
         nodes: nodes,
         links: links
       }
