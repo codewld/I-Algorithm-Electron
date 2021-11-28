@@ -1,9 +1,6 @@
 <template>
   <div class="home">
     <div class="button_container">
-      <!--<el-button @click="$router.replace('ShortestPath')">最短路径-Dijkstra</el-button>-->
-      <!--<el-button @click="$router.replace('MST')">最小生成树-Kruskal</el-button>-->
-      <!--<el-button >213</el-button>-->
       <div class="button" @click="$router.replace('ShortestPath')">
         最短路径-Dijkstra
       </div>
@@ -44,10 +41,13 @@ export default {
       box-shadow: 4px 4px 40px rgba(0,0,0,.2);
       border-color: rgba(0,0,0,.05);
       border-radius: 10px;
-      font-size: 28px;
+      font-size: 24px;
       text-align: center;
       line-height: 100px;
       transition: .3s;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow:ellipsis;
       &:hover {
         transform: translateY(-10px);
       }

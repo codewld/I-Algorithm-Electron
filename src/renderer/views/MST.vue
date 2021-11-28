@@ -3,7 +3,7 @@
     <el-header>
       <Header title="最小生成树 - Kruskal"/>
     </el-header>
-    <el-main v-loading="loading">
+    <el-main>
       <SeeksRelationGraph ref="seeksRelationGraph" :options="graphOptions"/>
     </el-main>
     <el-footer>
@@ -13,11 +13,20 @@
     </el-footer>
 
     <el-dialog title="配置" :visible.sync="configureDialogVisible" width="80%">
+      {{configureForm}}
       <el-tabs v-model="configureTabName" type="card">
         <el-tab-pane label="点配置" name="1">
           <el-form ref="form" :model="configureForm" label-width="80px">
             <el-form-item label="顶点数">
-              <el-input v-model="configureForm.nodeNum"></el-input>
+              <!--<el-input v-model="configureForm.nodeNum"></el-input>-->
+              <el-select v-model="configureForm.nodeNum" placeholder="请选择">
+                <el-option
+                  v-for="item in 8"
+                  :key="item"
+                  :label="item"
+                  :value="item">
+                </el-option>
+              </el-select>
             </el-form-item>
           </el-form>
         </el-tab-pane>
@@ -88,7 +97,6 @@ export default {
   components: {SeeksRelationGraph, Header},
   data() {
     return {
-      loading: false,
       // 图表选项
       graphOptions: {
         allowShowMiniToolBar: false,
