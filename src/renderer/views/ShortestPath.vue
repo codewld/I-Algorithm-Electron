@@ -365,7 +365,7 @@ export default {
      * 计算并展示计算结果
      */
     handleCount() {
-      this.resTableData = this.count()
+      this.count()
       this.resDialogVisible = true
     },
     /**
@@ -416,7 +416,7 @@ export default {
           }
         }
       }
-      return distanceToOrigin
+      this.resTableData = distanceToOrigin
     }
   }
 }

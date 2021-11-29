@@ -394,8 +394,8 @@ export default {
        */
       function merge(start, end) {
         // 获取根节点
-        let father1 = father[start]
-        let father2 = father[end]
+        let father1 = findFather(start)
+        let father2 = findFather(end)
         // 当两个根节点不同时，说明是两棵树，合并；
         // 当两个根节点相同时，拒绝合并
         if (father1 !== father2) {

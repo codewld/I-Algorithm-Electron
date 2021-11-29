@@ -408,13 +408,14 @@ export default {
       /**
        * 找到点的匹配点
        */
-      function dfs(node) {
+      function findMatch(node) {
         for (let i = 0; i < nodeNum; i++) {
-          // 如果点未加入匹配且可连接
+          // 如果点未访问且可连接
           if (flag[i] === -1 && connectable(node, i)) {
+            // 标记点已访问
             flag[i] = 1;
             // 如果该点没有匹配点，或该点的匹配点可以找到匹配点
-            if (match[i] === -1 || dfs(match[i])) {
+            if (match[i] === -1 || findMatch(match[i])) {
               match[i] = node
               match[node] = i
               return true
@@ -442,14 +443,13 @@ export default {
       let linkNum = links.length
 
 
-      // 计算
-      let sum = 0
+      // 匹配数组
       let match = new Array(nodeNum).fill(-1)
+      // 标记数组，标记点是否已访问
       let flag
       for (let i = 0; i <= linkNum / 2; i++) {
-        // 标记数组，标记点是否已经加入匹配
         flag = new Array(nodeNum).fill(-1)
-        sum += dfs(i)
+        findMatch(i)
       }
       return match
     }
