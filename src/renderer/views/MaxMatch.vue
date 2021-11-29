@@ -65,12 +65,6 @@
                     <span v-show="scope.row.disabled">{{ getCharByIndex(scope.row.end) }}</span>
                   </template>
                 </el-table-column>
-                <el-table-column label="权重" prop="value">
-                  <template slot-scope="scope">
-                    <el-input placeholder="请输入内容" v-show="!scope.row.disabled" v-model="scope.row.value"></el-input>
-                    <span v-show="scope.row.disabled">{{ scope.row.value }}</span>
-                  </template>
-                </el-table-column>
                 <el-table-column label="操作">
                   <template slot-scope="scope">
                     <el-button type="primary" icon="el-icon-edit" circle @click="scope.row.disabled = false"
@@ -419,6 +413,7 @@ export default {
           // 如果点未加入匹配且可连接
           if (flag[i] === -1 && connectable(node, i)) {
             flag[i] = 1;
+            // 如果该点没有匹配点，或该点的匹配点可以找到匹配点
             if (match[i] === -1 || dfs(match[i])) {
               match[i] = node
               match[node] = i
@@ -456,11 +451,6 @@ export default {
         flag = new Array(nodeNum).fill(-1)
         sum += dfs(i)
       }
-
-      console.log("---sum---")
-      console.log(sum)
-      console.log("---sum---")
-
       return match
     }
   }

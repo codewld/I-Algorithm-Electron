@@ -55,7 +55,7 @@
                     <span v-show="scope.row.disabled">{{ getCharByIndex(scope.row.start) }}</span>
                   </template>
                 </el-table-column>
-                <el-table-column label="终点" prop="end">
+                <el-table-column label="终点">
                   <template slot-scope="scope">
                     <el-select v-model="scope.row.end" placeholder="请选择" v-show="!scope.row.disabled">
                       <el-option v-for="(item, index) in configureForm.nodeNum ? parseInt(configureForm.nodeNum) : 0"
