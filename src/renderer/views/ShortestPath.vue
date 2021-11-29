@@ -57,7 +57,7 @@
                     <el-select v-model="scope.row.start" placeholder="请选择" v-show="!scope.row.disabled">
                       <el-option v-for="(item, index) in configureForm.nodeNum ? parseInt(configureForm.nodeNum) : 0"
                                  :key="index"
-                                 :label="getCharByIndex(index)" :value="index" :disabled="index === scope.row.end">
+                                 :label="getCharByIndex(index)" :value="index.toString()" :disabled="index === scope.row.end">
                       </el-option>
                     </el-select>
                     <span v-show="scope.row.disabled">{{ getCharByIndex(scope.row.start) }}</span>
@@ -68,7 +68,7 @@
                     <el-select v-model="scope.row.end" placeholder="请选择" v-show="!scope.row.disabled">
                       <el-option v-for="(item, index) in configureForm.nodeNum ? parseInt(configureForm.nodeNum) : 0"
                                  :key="index"
-                                 :label="getCharByIndex(index)" :value="index" :disabled="index === scope.row.start">
+                                 :label="getCharByIndex(index)" :value="index.toString()" :disabled="index === scope.row.start">
                       </el-option>
                     </el-select>
                     <span v-show="scope.row.disabled">{{ getCharByIndex(scope.row.end) }}</span>
