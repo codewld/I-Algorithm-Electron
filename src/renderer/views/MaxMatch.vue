@@ -9,8 +9,9 @@
     <el-footer>
       <div class="button_group_left">
         <el-button @click="handleExample(1)">样 例 1</el-button>
-        <el-button @click="handleExample(2)">样 例 2</el-button>
+        <el-button>样 例 2</el-button>
         <el-button @click="handleExample(3)">样 例 3</el-button>
+        <el-button @click="handleExample(4)">示 例</el-button>
       </div>
       <div class="button_group_right">
         <el-button type="info" @click="configureDialogVisible = true">配 置</el-button>
@@ -51,7 +52,7 @@
                                  :label="getCharByIndex(index)" :value="index.toString()" :disabled="index === scope.row.end">
                       </el-option>
                     </el-select>
-                    <span v-show="scope.row.disabled">{{ getCharByIndex(scope.row.start) }}</span>
+                    <span v-show="scope.row.disabled">{{ getCharByIndex(parseInt(scope.row.start)) }}</span>
                   </template>
                 </el-table-column>
                 <el-table-column label="终点" prop="end">
@@ -62,7 +63,7 @@
                                  :label="getCharByIndex(index)" :value="index.toString()" :disabled="index === scope.row.start">
                       </el-option>
                     </el-select>
-                    <span v-show="scope.row.disabled">{{ getCharByIndex(scope.row.end) }}</span>
+                    <span v-show="scope.row.disabled">{{ getCharByIndex(parseInt(scope.row.end)) }}</span>
                   </template>
                 </el-table-column>
                 <el-table-column label="操作">
@@ -107,9 +108,9 @@ export default {
         defaultJunctionPoint: 'border',
         layouts: [
           {
-            'label': '自动布局',
-            'layoutName': 'force',
-            'layoutClassName': 'seeks-layout-force'
+            'label': '中心',
+            'layoutName': 'center',
+            'layoutClassName': 'seeks-layout-center'
           }
         ]
       },
@@ -249,6 +250,59 @@ export default {
               end: "9"
             },
           ]
+        },
+        {
+          nodeNum: 12,
+          links: [
+            {
+              start: "0",
+              end: "6"
+            },
+            {
+              start: "0",
+              end: "7"
+            },
+            {
+              start: "0",
+              end: "8"
+            },
+            {
+              start: "1",
+              end: "7"
+            },
+            {
+              start: "2",
+              end: "9"
+            },
+            {
+              start: "3",
+              end: "6"
+            },
+            {
+              start: "3",
+              end: "8"
+            },
+            {
+              start: "3",
+              end: "10"
+            },
+            {
+              start: "4",
+              end: "7"
+            },
+            {
+              start: "4",
+              end: "10"
+            },
+            {
+              start: "4",
+              end: "11"
+            },
+            {
+              start: "5",
+              end: "8"
+            },
+          ]
         }
       ]
     }
@@ -338,9 +392,9 @@ export default {
           defaultJunctionPoint: 'border',
           layouts: [
             {
-              'label': '自动布局',
-              'layoutName': 'force',
-              'layoutClassName': 'seeks-layout-force'
+              'label': '中心',
+              'layoutName': 'center',
+              'layoutClassName': 'seeks-layout-center'
             }
           ]
         }, () => {})

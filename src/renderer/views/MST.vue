@@ -11,6 +11,7 @@
         <el-button @click="handleExample(1)">样 例 1</el-button>
         <el-button @click="handleExample(2)">样 例 2</el-button>
         <el-button @click="handleExample(3)">样 例 3</el-button>
+        <el-button @click="handleExample(4)">示 例</el-button>
       </div>
       <div class="button_group_right">
         <el-button type="info" @click="configureDialogVisible = true">配 置</el-button>
@@ -46,13 +47,14 @@
               <el-table :data="configureForm.links">
                 <el-table-column label="起点">
                   <template slot-scope="scope">
+                    <p>{{scope.row}}</p>
                     <el-select v-model="scope.row.start" placeholder="请选择" v-show="!scope.row.disabled">
                       <el-option v-for="(item, index) in configureForm.nodeNum ? parseInt(configureForm.nodeNum) : 0"
                                  :key="index"
                                  :label="getCharByIndex(index)" :value="index.toString()" :disabled="index === scope.row.end">
                       </el-option>
                     </el-select>
-                    <span v-show="scope.row.disabled">{{ getCharByIndex(scope.row.start) }}</span>
+                    <span v-show="scope.row.disabled">{{ getCharByIndex(parseInt(scope.row.start)) }}</span>
                   </template>
                 </el-table-column>
                 <el-table-column label="终点">
@@ -63,7 +65,7 @@
                                  :label="getCharByIndex(index)" :value="index.toString()" :disabled="index === scope.row.start">
                       </el-option>
                     </el-select>
-                    <span v-show="scope.row.disabled">{{ getCharByIndex(scope.row.end) }}</span>
+                    <span v-show="scope.row.disabled">{{ getCharByIndex(parseInt(scope.row.end)) }}</span>
                   </template>
                 </el-table-column>
                 <el-table-column label="权重" prop="value">
@@ -297,6 +299,96 @@ export default {
               start: "5",
               end: "6",
               value: "30"
+            }
+          ]
+        },
+        {
+          nodeNum: 10,
+          links: [
+            {
+              start: "0",
+              end: "1",
+              value: "1"
+            },
+            {
+              start: "0",
+              end: "4",
+              value: "3"
+            },
+            {
+              start: "1",
+              end: "2",
+              value: "5"
+            },
+            {
+              start: "1",
+              end: "3",
+              value: "6"
+            },
+            {
+              start: "1",
+              end: "4",
+              value: "1"
+            },
+            {
+              start: "2",
+              end: "3",
+              value: "4"
+            },
+            {
+              start: "2",
+              end: "8",
+              value: "7"
+            },
+            {
+              start: "2",
+              end: "9",
+              value: "2"
+            },
+            {
+              start: "3",
+              end: "5",
+              value: "4"
+            },
+            {
+              start: "3",
+              end: "7",
+              value: "3"
+            },
+            {
+              start: "3",
+              end: "9",
+              value: "9"
+            },
+            {
+              start: "4",
+              end: "5",
+              value: "11"
+            },
+            {
+              start: "5",
+              end: "6",
+              value: "2"
+            },
+            {
+              start: "6",
+              end: "7",
+              value: "1"
+            },
+            {
+              start: "7",
+              end: "8",
+              value: "2"
+            },
+            {
+              start: "7",
+              end: "9",
+              value: "4"
+            },
+            {
+              start: "8",
+              end: "9",
+              value: "3"
             }
           ]
         }

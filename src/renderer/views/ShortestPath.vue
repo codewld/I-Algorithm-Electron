@@ -60,7 +60,7 @@
                                  :label="getCharByIndex(index)" :value="index.toString()" :disabled="index === scope.row.end">
                       </el-option>
                     </el-select>
-                    <span v-show="scope.row.disabled">{{ getCharByIndex(scope.row.start) }}</span>
+                    <span v-show="scope.row.disabled">{{ getCharByIndex(parseInt(scope.row.start)) }}</span>
                   </template>
                 </el-table-column>
                 <el-table-column label="终点" prop="end">
@@ -71,7 +71,7 @@
                                  :label="getCharByIndex(index)" :value="index.toString()" :disabled="index === scope.row.start">
                       </el-option>
                     </el-select>
-                    <span v-show="scope.row.disabled">{{ getCharByIndex(scope.row.end) }}</span>
+                    <span v-show="scope.row.disabled">{{ getCharByIndex(parseInt(scope.row.end)) }}</span>
                   </template>
                 </el-table-column>
                 <el-table-column label="权重" prop="value">
